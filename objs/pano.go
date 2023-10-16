@@ -28,6 +28,7 @@ import (
 	"github.com/PaloAltoNetworks/pango/objs/profile/security/virus"
 	"github.com/PaloAltoNetworks/pango/objs/profile/security/vulnerability"
 	wfasp "github.com/PaloAltoNetworks/pango/objs/profile/security/wildfire"
+	"github.com/PaloAltoNetworks/pango/objs/schedule"
 	"github.com/PaloAltoNetworks/pango/objs/srvc"
 	"github.com/PaloAltoNetworks/pango/objs/srvcgrp"
 	"github.com/PaloAltoNetworks/pango/objs/tags"
@@ -56,6 +57,7 @@ type PanoObjs struct {
 	LogForwardingProfile                *logfwd.Panorama
 	LogForwardingProfileMatchList       *matchlist.PanoMatchList
 	LogForwardingProfileMatchListAction *action.PanoAction
+	Schedule                            *schedule.Panorama
 	SecurityProfileGroup                *spg.Panorama
 	Services                            *srvc.Panorama
 	ServiceGroup                        *srvcgrp.Panorama
@@ -102,6 +104,7 @@ func (c *PanoObjs) Initialize(i util.XapiClient) {
 	c.LogForwardingProfileMatchListAction = &action.PanoAction{}
 	c.LogForwardingProfileMatchListAction.Initialize(i)
 
+	c.Schedule = schedule.PanoramaNamespace(i)
 	c.SecurityProfileGroup = spg.PanoramaNamespace(i)
 	c.Services = srvc.PanoramaNamespace(i)
 	c.ServiceGroup = srvcgrp.PanoramaNamespace(i)

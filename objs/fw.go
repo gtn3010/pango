@@ -28,6 +28,7 @@ import (
 	"github.com/PaloAltoNetworks/pango/objs/profile/security/virus"
 	"github.com/PaloAltoNetworks/pango/objs/profile/security/vulnerability"
 	wfasp "github.com/PaloAltoNetworks/pango/objs/profile/security/wildfire"
+	"github.com/PaloAltoNetworks/pango/objs/schedule"
 	"github.com/PaloAltoNetworks/pango/objs/srvc"
 	"github.com/PaloAltoNetworks/pango/objs/srvcgrp"
 	"github.com/PaloAltoNetworks/pango/objs/tags"
@@ -56,6 +57,7 @@ type FwObjs struct {
 	LogForwardingProfile                *logfwd.Firewall
 	LogForwardingProfileMatchList       *matchlist.FwMatchList
 	LogForwardingProfileMatchListAction *action.FwAction
+	Schedule                            *schedule.Firewall
 	SecurityProfileGroup                *spg.Firewall
 	Services                            *srvc.Firewall
 	ServiceGroup                        *srvcgrp.Firewall
@@ -102,6 +104,7 @@ func (c *FwObjs) Initialize(i util.XapiClient) {
 	c.LogForwardingProfileMatchListAction = &action.FwAction{}
 	c.LogForwardingProfileMatchListAction.Initialize(i)
 
+	c.Schedule = schedule.FirewallNamespace(i)
 	c.SecurityProfileGroup = spg.FirewallNamespace(i)
 	c.Services = srvc.FirewallNamespace(i)
 	c.ServiceGroup = srvcgrp.FirewallNamespace(i)
