@@ -18,6 +18,7 @@ type Entry struct {
 	IncludeAcls                  []string // unordered
 	ExcludeAcls                  []string // unordered
 	EnablePacketBufferProtection bool     // 8.0+
+	EnableL3L4HeaderInspection   bool     // 10.0+
 	EnableDeviceIdentification   bool     // 10.0+
 	DeviceIncludeAcls            []string // 10.0+, unordered?
 	DeviceExcludeAcls            []string // 10.0+, unordered?
@@ -34,6 +35,7 @@ func (o *Entry) Copy(s Entry) {
 	o.IncludeAcls = util.CopyStringSlice(s.IncludeAcls)
 	o.ExcludeAcls = util.CopyStringSlice(s.ExcludeAcls)
 	o.EnablePacketBufferProtection = s.EnablePacketBufferProtection
+	o.EnableL3L4HeaderInspection = s.EnableL3L4HeaderInspection
 	o.EnableDeviceIdentification = s.EnableDeviceIdentification
 	o.DeviceIncludeAcls = util.CopyStringSlice(s.DeviceIncludeAcls)
 	o.DeviceExcludeAcls = util.CopyStringSlice(s.DeviceExcludeAcls)
@@ -257,6 +259,7 @@ type entry_v2 struct {
 type network_v2 struct {
 	ZoneProfile                  string           `xml:"zone-protection-profile,omitempty"`
 	EnablePacketBufferProtection string           `xml:"enable-packet-buffer-protection"`
+	EnableL3L4HeaderInspection   string           `xml:"net-inspection"`
 	LogSetting                   string           `xml:"log-setting,omitempty"`
 	Tap                          *util.MemberType `xml:"tap"`
 	VWire                        *util.MemberType `xml:"virtual-wire"`
@@ -344,6 +347,7 @@ func (o *entry_v3) normalize() Entry {
 	if o.Network != nil {
 		ans.ZoneProfile = o.Network.ZoneProfile
 		ans.EnablePacketBufferProtection = util.AsBool(o.Network.EnablePacketBufferProtection)
+		ans.EnableL3L4HeaderInspection = util.AsBool(o.Network.EnableL3L4HeaderInspection)
 		ans.LogSetting = o.Network.LogSetting
 
 		var ilist []string
@@ -401,10 +405,11 @@ func specify_v3(e Entry) interface{} {
 		EnableDeviceIdentification: util.YesNo(e.EnableDeviceIdentification),
 	}
 
-	if e.Mode != "" || e.ZoneProfile != "" || e.EnablePacketBufferProtection || e.LogSetting != "" {
+	if e.Mode != "" || e.ZoneProfile != "" || e.EnablePacketBufferProtection || e.EnableL3L4HeaderInspection || e.LogSetting != "" {
 		ans.Network = &network_v2{
 			ZoneProfile:                  e.ZoneProfile,
 			EnablePacketBufferProtection: util.YesNo(e.EnablePacketBufferProtection),
+			EnableL3L4HeaderInspection:   util.YesNo(e.EnableL3L4HeaderInspection),
 			LogSetting:                   e.LogSetting,
 		}
 
